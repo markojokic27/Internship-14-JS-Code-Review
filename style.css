@@ -15,6 +15,9 @@ p {
 a {
   text-decoration: none;
 }
+button{
+  cursor: pointer;
+}
 body {
   margin: 0;
   padding: 0;
@@ -67,5 +70,60 @@ body {
 .button-number:hover{
   background-color: #f5f5f7;
   color: #101820;
-  cursor: pointer;
+}
+.new-comment{
+  border:solid 1px white;
+  padding: 20px;
+  border-radius: 8px;
+  height: 200px;
+  position: relative;
+  display: none;
+}
+h3{
+  color: white;
+  margin-bottom: 20px;
+}
+textarea{
+  width: 100%;
+  font-size: 20px;
+  resize: none;
+}
+.green-buttons{
+  font-size: 20px;
+  text-align: center;
+  color: white;
+  background-color: #1bc701;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: solid 2px #1bc701;
+  border-radius: 5px;
+  position: absolute;
+}
+.save-button{
+  position: absolute;
+  bottom: 18px;
+  right: 21px;
+}
+.send-button{
+  position: absolute;
+  bottom: 18px;
+  right: 218px;
+}
+.green-buttons:hover{
+  background-color: #44cf2f;
+  border: solid 2px #44cf2f;
+}
+.display-block{
+  display: block;
+}
+.comment{
+  border:solid 1px white;
+  border-radius: 8px;
+  height: fit-content;
+  width: 200px;
+  margin-top: 30px;
+  padding: 20px;
+  padding-bottom: 40px;
+  position: relative;
 }
