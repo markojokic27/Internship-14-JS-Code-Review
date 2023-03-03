@@ -84,8 +84,11 @@ document.addEventListener("click", function (event) {
     }
 
     let comments = commentWrapper[0].getElementsByClassName("comment");
+    
     if (comments.length) {
       for (let j = 0; j < comments.length; j++) {
+        let contentOfComments=comments[j].getElementsByClassName("comment-content");
+        let dateOfComments=comments[j].getElementsByClassName("comment-date");
         //Like button
         let likeButton = comments[j].getElementsByClassName("like-button");
         for (let k = 0; k < likeButton.length; k++) {
@@ -107,6 +110,7 @@ document.addEventListener("click", function (event) {
         for (let d = 0; d < deleteButton.length; d++) {
           if (deleteButton[d] === event.target) {
             commentWrapper[0].removeChild(comments[j]);
+            DeleteCommentFromLocalStorage(i,j,contentOfComments[0].innerHTML,dateOfComments[0].innerHTML);
           }
         }
       }
@@ -125,7 +129,6 @@ class Comment {
     this.like = like;
   }
 }
-let CommentStorage = [];
 function AddCommentToLocalStorage(line, position, title, content, date, like) {
   var newCom = new Comment(line, position, title, content, date, like);
   const currentStorage = JSON.parse(localStorage.getItem("comment"));
@@ -136,5 +139,15 @@ function AddCommentToLocalStorage(line, position, title, content, date, like) {
       "comment",
       JSON.stringify([...currentStorage, newCom])
     );
+  }
+}
+function DeleteCommentFromLocalStorage(line, position, content, date){
+  let a=localStorage.getItem('comment');
+  let b = JSON.parse(a);
+  let c = b.map(classObj => new Comment(classObj.line, classObj.position, classObj.title, classObj.content, classObj.date, classObj.like));
+  for(let com of c){
+    if(com.content===content&&com.date===date&&com.line===line)
+      c.pop(com);
+      localStorage.setItem('comment', JSON.stringify(c));
   }
 }
