@@ -93,16 +93,19 @@ document.addEventListener("click", function (event) {
         let likeButton = comments[j].getElementsByClassName("like-button");
         for (let k = 0; k < likeButton.length; k++) {
           if (likeButton[k] === event.target) {
+            let IsLiked=false;
             if (likeButton[k].innerHTML === "Like") {
               likeButton[k].innerHTML = "Liked";
               likeButton[k].classList.add("liked-button");
               likeButton[k].classList.add("liked-button:hover");
+              IsLiked=true;
             } else {
               likeButton[k].classList.remove("liked-button");
               likeButton[k].classList.remove("liked-button:hover");
-
+              IsLiked=false;
               likeButton[k].innerHTML = "Like";
             }
+            LikeCommentFromLocalStorage(i,j,contentOfComments[0].innerHTML,dateOfComments[0].innerHTML,IsLiked);
           }
         }
         //Delete button
@@ -147,7 +150,17 @@ function DeleteCommentFromLocalStorage(line, position, content, date){
   let c = b.map(classObj => new Comment(classObj.line, classObj.position, classObj.title, classObj.content, classObj.date, classObj.like));
   for(let com of c){
     if(com.content===content&&com.date===date&&com.line===line)
-      c.pop(com);
+      c.splice(c.indexOf(com), 1);
+      localStorage.setItem('comment', JSON.stringify(c));
+  }
+}
+function LikeCommentFromLocalStorage(line, position, content, date,like){
+  let a=localStorage.getItem('comment');
+  let b = JSON.parse(a);
+  let c = b.map(classObj => new Comment(classObj.line, classObj.position, classObj.title, classObj.content, classObj.date, classObj.like));
+  for(let com of c){
+    if(com.content===content&&com.date===date&&com.line===line)
+      c[c.indexOf(com)].like=like;
       localStorage.setItem('comment', JSON.stringify(c));
   }
 }
