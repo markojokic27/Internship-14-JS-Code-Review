@@ -49,14 +49,15 @@ document.addEventListener("click", function (event) {
             DateNow,
             false
           );
+          
         } else alert("New comment is empty.");
       }
     }
     //Button Send - server
     let sendButton = codeLine[i].getElementsByClassName("send-button");
-    for (let i = 0; i < sendButton.length; i++) {
-      if (sendButton[i] === event.target) {
-        if (NewCommentContent[i].value) {
+    for (let s = 0; s < sendButton.length; s++) {
+      if (sendButton[s] === event.target) {
+        if (NewCommentContent[s].value) {
           let newCom = comment[0].cloneNode(true);
           let titleCom = newCom.getElementsByClassName("comment-title");
           titleCom[0].innerHTML = "Comment from server";
@@ -74,11 +75,12 @@ document.addEventListener("click", function (event) {
             "." +
             now.getFullYear() +
             ".";
-          ComContent[0].innerHTML = NewCommentContent[i].value;
+          ComContent[0].innerHTML = NewCommentContent[s].value;
           newCom.removeAttribute("id");
-          NewCommentContent[i].value = "";
-          commentWrapper[i].appendChild(newCom);
+          NewCommentContent[s].value = "";
+          commentWrapper[s].appendChild(newCom);
           CommentDate[0].innerHTML = DateNow;
+          AddCommentToServer(ComContent[0].innerHTML, i)
         } else alert("New comment is empty.");
       }
     }
@@ -89,6 +91,7 @@ document.addEventListener("click", function (event) {
       for (let j = 0; j < comments.length; j++) {
         let contentOfComments=comments[j].getElementsByClassName("comment-content");
         let dateOfComments=comments[j].getElementsByClassName("comment-date");
+        let comTitle=comments[j].getElementsByClassName("comment-title");
         //Like button
         let likeButton = comments[j].getElementsByClassName("like-button");
         for (let k = 0; k < likeButton.length; k++) {
@@ -113,7 +116,12 @@ document.addEventListener("click", function (event) {
         for (let d = 0; d < deleteButton.length; d++) {
           if (deleteButton[d] === event.target) {
             commentWrapper[0].removeChild(comments[j]);
-            DeleteCommentFromLocalStorage(i,j,contentOfComments[0].innerHTML,dateOfComments[0].innerHTML);
+            console.log(comTitle[0].innerHTML);
+            if(comTitle[0].innerHTML==="Local storage comment"){
+            DeleteCommentFromLocalStorage(i,j,contentOfComments[0].innerHTML,dateOfComments[0].innerHTML);}
+            else{
+              DeleteCommentFromServer(i,contentOfComments[0].innerHTML);
+            }
           }
         }
       }
@@ -189,4 +197,151 @@ function DisplayCommentFromLocalStorage(){
       commentWrapper[0].appendChild(newCom);
   }
     
+}
+//SERVER
+const baseUrl = "https://homework-server1.onrender.com";
+const key = "markojokic27";
+
+function AddCommentToServer(comContent, i) {
+  const comment = {
+    line: i,
+    text: comContent,
+  };
+  (async () => {
+    try {
+      const options = {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          key,
+        },
+        body: JSON.stringify(comment),
+      };
+      const response = await fetch(`${baseUrl}/create`, options);
+      const json = await response.json();
+      if (!response.ok) {
+        throw json.message;
+      }
+    } catch (err) {
+      console.log(err);
+      alert(err);
+    }
+  })();
+}
+
+function DeleteCommentFromServer(i,contentOfComment){
+  (async () => {
+    try {
+      const options = {
+        headers: {
+          key,
+        },
+
+      };
+      const response = await fetch(`${baseUrl}/comments`, options);
+      const json = await response.json();
+      let coms=json.comments;
+      const arrayOfComments = coms.map(item => {
+        return {
+          id:item.id,
+          line:item.line,
+          text:item.text,
+          isLiked:item.isLiked,
+          createdAt:item.createdAt
+        };})
+        for(let com of arrayOfComments){
+          if(com.text===contentOfComment&&i===com.line){
+            (async () => {
+              try {
+                const options = {
+                  method: "DELETE",
+                  headers: { key },
+                };
+                const response = await fetch(
+                  `${baseUrl}/remove/${com.id}`,
+                  options
+                );
+            
+                if (!response.ok) {
+                  const json = await response.json();
+                  throw json.message;
+                }
+              } catch (err) {
+                console.log("ERROR:", err);
+                alert("Error", err);
+              }
+            })();
+          }
+      }
+      if (!response.ok) {
+        throw json.message;
+      }
+      console.log(json);
+    } catch (err) {
+      console.log(err);
+      alert(err);
+    }
+  })();
+}
+
+DisplayCommentsFromServer();
+function DisplayCommentsFromServer() {
+  (async () => {
+    try {
+      const options = {
+        headers: {
+          key,
+        },
+
+      };
+      const response = await fetch(`${baseUrl}/comments`, options);
+      const json = await response.json();
+      let coms=json.comments;
+      console.log(coms);
+      const arrayOfComments = coms.map(item => {
+        return {
+          id:item.id,
+          line:item.line,
+          text:item.text,
+          isLiked:item.isLiked,
+          createdAt:item.createdAt
+        };})
+        for(let com of arrayOfComments){
+          let codeLine = document.getElementsByClassName("code-line-wrapper");
+          console.log(com.line);
+          let commentWrapper = codeLine[com.line].getElementsByClassName("comments-wrapper");
+          let comment = document.getElementsByClassName("comment");
+          let newCom = comment[0].cloneNode(true);
+          let ComContent = newCom.getElementsByClassName("comment-content");
+          let CommentDate = newCom.getElementsByClassName("comment-date");
+          let likeButton = newCom.getElementsByClassName("like-button");
+          let newTitle = newCom.getElementsByClassName("comment-title");
+          ComContent[0].innerHTML = com.text;
+          newCom.removeAttribute("id");
+          newTitle[0].innerHTML="Comment from server";
+          const dateString =com.createdAt;
+          const date = new Date(dateString);
+          const hours = date.getHours().toString().padStart(2, "0");
+          const minutes = date.getMinutes().toString().padStart(2, "0");
+          const day = date.getDate().toString().padStart(2, "0");
+          const month = (date.getMonth() + 1).toString().padStart(2, "0"); 
+          const year = date.getFullYear().toString();
+          const formattedDate = `${hours}:${minutes}   ${day}.${month}.${year}`;
+          CommentDate[0].innerHTML = formattedDate;     
+          if(com.isLiked){
+            likeButton[0].innerHTML = "Liked";
+            likeButton[0].classList.add("liked-button");
+            likeButton[0].classList.add("liked-button:hover");
+          }
+          commentWrapper[0].appendChild(newCom);
+      }
+      if (!response.ok) {
+        throw json.message;
+      }
+      console.log(json);
+    } catch (err) {
+      console.log(err);
+      alert(err);
+    }
+  })();
 }
