@@ -158,6 +158,18 @@ textarea {
   background-color: rgb(73, 52, 233);
   border-color: rgb(73, 52, 233);
 }
-.comment:first-of-type{
+#comment-schema{
   display: none;
+}
+.comment{
+  font-size: 18px;
+}
+.liked-button{
+  background-color: white;
+  color: rgb(50, 26, 228);
+}
+.liked-button:hover{
+  background-color:white;
+  color: red;
+  border-color: red;
 }
