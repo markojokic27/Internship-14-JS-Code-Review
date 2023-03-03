@@ -15,7 +15,7 @@ p {
 a {
   text-decoration: none;
 }
-button{
+button {
   cursor: pointer;
 }
 body {
@@ -25,31 +25,29 @@ body {
   display: flex;
   justify-content: center;
 }
-.wrapper{
+.wrapper {
   width: 1000px;
   text-align: center;
 }
-.code-wrapper{
+.code-wrapper {
   text-align: left;
-  
-
 }
-.title{
+.title {
   color: rgb(255, 255, 255);
   margin-top: 30px;
   margin-bottom: 50px;
   font-size: 40px;
 }
-.code-line-wrapper{
+.code-line-wrapper {
   position: relative;
 }
-.code-line-wrapper > p{
+.code-line-wrapper > p {
   font-size: 20px;
   padding: 10px 50px;
   height: fit-content;
   color: white;
 }
-.code-line-wrapper:nth-child(2n-1){
+.code-line-wrapper:nth-child(2n-1) {
   background-color: rgba(100, 89, 89, 0.22);
 }
 .button-number {
@@ -67,28 +65,28 @@ body {
   top: 7px;
   left: 7px;
 }
-.button-number:hover{
+.button-number:hover {
   background-color: #f5f5f7;
   color: #101820;
 }
-.new-comment{
-  border:solid 1px white;
+.new-comment {
+  border: solid 1px white;
   padding: 20px;
   border-radius: 8px;
   height: 200px;
   position: relative;
   display: none;
 }
-h3{
+h3 {
   color: white;
   margin-bottom: 20px;
 }
-textarea{
+textarea {
   width: 100%;
   font-size: 20px;
   resize: none;
 }
-.green-buttons{
+.green-buttons {
   font-size: 20px;
   text-align: center;
   color: white;
@@ -100,30 +98,66 @@ textarea{
   border-radius: 5px;
   position: absolute;
 }
-.save-button{
+.save-button {
   position: absolute;
   bottom: 18px;
   right: 21px;
 }
-.send-button{
+.send-button {
   position: absolute;
   bottom: 18px;
   right: 218px;
 }
-.green-buttons:hover{
+.green-buttons:hover {
   background-color: #44cf2f;
   border: solid 2px #44cf2f;
 }
-.display-block{
+.display-block {
   display: block;
 }
-.comment{
-  border:solid 1px white;
+.comment {
+  border: solid 1px white;
   border-radius: 8px;
   height: fit-content;
-  width: 200px;
-  margin-top: 30px;
-  padding: 20px;
+  width: 100%;
+  margin-top: 5px;
+  padding: 15px;
   padding-bottom: 40px;
   position: relative;
+  background-color: #9a9a9a;
+}
+.comment-title {
+  margin-bottom: 10px;
+  color: white;
+}
+.comment-date {
+  position: absolute;
+  font-size: 18px;
+  top: 15px;
+  right: 15px;
+}
+.delete-button {
+  background-color: rgb(228, 26, 26);
+  border-color: rgb(228, 26, 26);
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+}
+.delete-button:hover {
+  background-color: rgb(221, 59, 59);
+  border-color: rgb(221, 59, 59);
+}
+.like-button {
+  background-color: rgb(50, 26, 228);
+  border-color: rgb(50, 26, 228);
+  position: absolute;
+  right: 100px;
+  bottom: 10px;
+}
+.like-button:hover {
+  background-color: rgb(73, 52, 233);
+  border-color: rgb(73, 52, 233);
+}
+.comment:first-of-type{
+  display: none;
 }
