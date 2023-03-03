@@ -47,7 +47,7 @@ document.addEventListener("click", function (event) {
             "Local Storage Comment",
             ComContent[0].innerHTML,
             DateNow,
-            true
+            false
           );
         } else alert("New comment is empty.");
       }
@@ -163,4 +163,30 @@ function LikeCommentFromLocalStorage(line, position, content, date,like){
       c[c.indexOf(com)].like=like;
       localStorage.setItem('comment', JSON.stringify(c));
   }
+}
+//Refresh - LOCAL STORAGE
+DisplayCommentFromLocalStorage();
+function DisplayCommentFromLocalStorage(){
+  let a=localStorage.getItem('comment');
+  let b = JSON.parse(a);
+  let c = b.map(classObj => new Comment(classObj.line, classObj.position, classObj.title, classObj.content, classObj.date, classObj.like));
+  for(let com of c){
+      let codeLine = document.getElementsByClassName("code-line-wrapper");
+      let commentWrapper = codeLine[com.line].getElementsByClassName("comments-wrapper");
+      let comment = document.getElementsByClassName("comment");
+      let newCom = comment[0].cloneNode(true);
+      let ComContent = newCom.getElementsByClassName("comment-content");
+      let CommentDate = newCom.getElementsByClassName("comment-date");
+      let likeButton = newCom.getElementsByClassName("like-button");
+      ComContent[0].innerHTML = com.content;
+      newCom.removeAttribute("id");
+      CommentDate[0].innerHTML = com.date;     
+      if(com.like){
+        likeButton[0].innerHTML = "Liked";
+        likeButton[0].classList.add("liked-button");
+        likeButton[0].classList.add("liked-button:hover");
+      }
+      commentWrapper[0].appendChild(newCom);
+  }
+    
 }
