@@ -12,7 +12,7 @@ document.addEventListener("click", function (event) {
       }
     }
 
-    //Button Send - local storage
+    //Button Save - local storage
     let saveButton = codeLine[i].getElementsByClassName("save-button");
     let commentWrapper = codeLine[i].getElementsByClassName("comments-wrapper");
     let comment = document.getElementsByClassName("comment");
@@ -22,6 +22,36 @@ document.addEventListener("click", function (event) {
       if (saveButton[i] === event.target) {
         if (NewCommentContent[i].value) {
           let newCom = comment[0].cloneNode(true);
+          let ComContent = newCom.getElementsByClassName("comment-content");
+          let CommentDate = newCom.getElementsByClassName("comment-date");
+          const now = new Date();
+          let DateNow =
+            now.getHours() +
+            ":" +
+            now.getMinutes() +
+            "&nbsp;&nbsp;&nbsp;&nbsp;" +
+            now.getDay() +
+            "." +
+            now.getMonth() +
+            "." +
+            now.getFullYear() +
+            ".";
+          ComContent[0].innerHTML = NewCommentContent[i].value;
+          newCom.removeAttribute("id");
+          NewCommentContent[i].value = "";
+          commentWrapper[i].appendChild(newCom);
+          CommentDate[0].innerHTML = DateNow;
+        } else alert("New comment is empty.");
+      }
+    }
+    //Button Send - server
+    let sendButton = codeLine[i].getElementsByClassName("send-button");
+    for (let i = 0; i < sendButton.length; i++) {
+      if (sendButton[i] === event.target) {
+        if (NewCommentContent[i].value) {
+          let newCom = comment[0].cloneNode(true);
+          let titleCom=newCom.getElementsByClassName("comment-title");
+          titleCom[0].innerHTML="Comment from server"
           let ComContent = newCom.getElementsByClassName("comment-content");
           let CommentDate = newCom.getElementsByClassName("comment-date");
           const now = new Date();
@@ -69,12 +99,12 @@ document.addEventListener("click", function (event) {
         let deleteButton = comments[j].getElementsByClassName("delete-button");
         //console.log(deleteButton);
         for (let d = 0; d < deleteButton.length; d++) {
-          let b=j;
+          let b = j;
           if (deleteButton[d] === event.target) {
-            if(i===0)
-              b++;
-          commentWrapper[0].removeChild(comments[b]);
-        }}
+            if (i === 0) b++;
+            commentWrapper[0].removeChild(comments[b]);
+          }
+        }
       }
     }
   }
