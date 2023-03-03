@@ -18,9 +18,9 @@ document.addEventListener("click", function (event) {
     let comment = document.getElementsByClassName("comment");
     let NewCommentContent =
       codeLine[i].getElementsByClassName("NewCommentContent");
-    for (let i = 0; i < saveButton.length; i++) {
-      if (saveButton[i] === event.target) {
-        if (NewCommentContent[i].value) {
+    for (let s = 0; s < saveButton.length; s++) {
+      if (saveButton[s] === event.target) {
+        if (NewCommentContent[0].value) {
           let newCom = comment[0].cloneNode(true);
           let ComContent = newCom.getElementsByClassName("comment-content");
           let CommentDate = newCom.getElementsByClassName("comment-date");
@@ -36,11 +36,19 @@ document.addEventListener("click", function (event) {
             "." +
             now.getFullYear() +
             ".";
-          ComContent[0].innerHTML = NewCommentContent[i].value;
+          ComContent[0].innerHTML = NewCommentContent[0].value;
           newCom.removeAttribute("id");
-          NewCommentContent[i].value = "";
-          commentWrapper[i].appendChild(newCom);
+          NewCommentContent[0].value = "";
+          commentWrapper[0].appendChild(newCom);
           CommentDate[0].innerHTML = DateNow;
+          AddCommentToLocalStorage(
+            i,
+            s,
+            "Local Storage Comment",
+            ComContent[0].innerHTML,
+            DateNow,
+            true
+          );
         } else alert("New comment is empty.");
       }
     }
@@ -50,8 +58,8 @@ document.addEventListener("click", function (event) {
       if (sendButton[i] === event.target) {
         if (NewCommentContent[i].value) {
           let newCom = comment[0].cloneNode(true);
-          let titleCom=newCom.getElementsByClassName("comment-title");
-          titleCom[0].innerHTML="Comment from server"
+          let titleCom = newCom.getElementsByClassName("comment-title");
+          titleCom[0].innerHTML = "Comment from server";
           let ComContent = newCom.getElementsByClassName("comment-content");
           let CommentDate = newCom.getElementsByClassName("comment-date");
           const now = new Date();
@@ -80,7 +88,6 @@ document.addEventListener("click", function (event) {
       for (let j = 0; j < comments.length; j++) {
         //Like button
         let likeButton = comments[j].getElementsByClassName("like-button");
-        console.log(likeButton);
         for (let k = 0; k < likeButton.length; k++) {
           if (likeButton[k] === event.target) {
             if (likeButton[k].innerHTML === "Like") {
@@ -97,15 +104,37 @@ document.addEventListener("click", function (event) {
         }
         //Delete button
         let deleteButton = comments[j].getElementsByClassName("delete-button");
-        //console.log(deleteButton);
         for (let d = 0; d < deleteButton.length; d++) {
-          let b = j;
           if (deleteButton[d] === event.target) {
-            if (i === 0) b++;
-            commentWrapper[0].removeChild(comments[b]);
+            commentWrapper[0].removeChild(comments[j]);
           }
         }
       }
     }
   }
 });
+
+//LOCAL STORAGE
+class Comment {
+  constructor(line, position, title, content, date, like) {
+    this.line = line;
+    this.position = position;
+    this.title = title;
+    this.content = content;
+    this.date = date;
+    this.like = like;
+  }
+}
+let CommentStorage = [];
+function AddCommentToLocalStorage(line, position, title, content, date, like) {
+  var newCom = new Comment(line, position, title, content, date, like);
+  const currentStorage = JSON.parse(localStorage.getItem("comment"));
+  if (!currentStorage || !currentStorage.length) {
+    localStorage.setItem("comment", JSON.stringify([newCom]));
+  } else {
+    localStorage.setItem(
+      "comment",
+      JSON.stringify([...currentStorage, newCom])
+    );
+  }
+}
